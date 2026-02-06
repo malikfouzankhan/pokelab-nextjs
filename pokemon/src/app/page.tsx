@@ -66,21 +66,26 @@ export default function Home() {
 
       <div className="flex-1 overflow-hidden flex flex-col">
         {/* Main Content Area */}
+        {/* Main Content Area */}
         <div className="flex-1 overflow-hidden relative">
-            {status === 'idle' && pokemon.length === 0 ? (
-                <div className="absolute inset-0 flex items-center justify-center bg-white dark:bg-neutral-950">
-                   <DataFetcher />
-                </div>
-            ) : status === 'fetching' ? (
-                 <div className="absolute inset-0 flex items-center justify-center bg-white dark:bg-neutral-950 z-50">
-                   <DataFetcher />
-                 </div>
-            ) : (
-                <DataTable 
+            {/* Table Layer - Render if we have data */}
+            {pokemon.length > 0 && (
+                 <DataTable 
                     data={pokemon} 
                     dynamicColumns={dynamicColumns} 
                     onUpdateRow={updatePokemon} 
                 />
+            )}
+
+            {/* Fetcher Layer - Conditional positioning */}
+            {(status === 'idle' || status === 'fetching' || status === 'error') && (
+                <div className={
+                    pokemon.length === 0 
+                        ? "absolute inset-0 flex items-center justify-center bg-white dark:bg-neutral-950 z-50" // Blocking initial state
+                        : "absolute bottom-6 right-6 z-50 bg-white/90 dark:bg-neutral-900/90 shadow-xl rounded-xl border border-neutral-200 dark:border-neutral-800 backdrop-blur-sm p-4 w-80 animate-in slide-in-from-bottom-10 fade-in duration-300" // Floating overlay
+                }>
+                   <DataFetcher />
+                </div>
             )}
         </div>
       </div>
